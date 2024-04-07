@@ -1,0 +1,35 @@
+<!-- <header>
+  <mat-toolbar>
+    <span>Task Manager</span>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button color="primary" aria-label="New" (click)="addTask()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar>
+</header> -->
+
+<app-task-header title="Task Manager" (action)="addTask()"></app-task-header>
+
+<section>
+  <mat-accordion>
+    <mat-expansion-panel hideToggle *ngFor="let task of tasks$ | async">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{task.title}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{task.status | uppercase}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>{{task.description}}</p>
+      <mat-action-row>
+        <button mat-icon-button color="accent" aria-label="Edit" (click)="editTask(task.id)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" aria-label="Delete" (click)="deleteTask(task.id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>

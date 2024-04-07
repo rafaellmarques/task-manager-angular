@@ -1,0 +1,19 @@
+<header>
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <button *ngIf="back.observed" mat-icon-button aria-label="Back" (click)="onClick()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span>{{title}}</span>
+      <ng-container *ngIf="action.observed">
+        <span class="toolbar-spacer"></span>
+        <button mat-icon-button color="primary" aria-label="New" (click)="onClick()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </ng-container>
+    </mat-toolbar-row>
+    <mat-toolbar-row *ngIf="subTitle">
+      <span>{{ subTitle }}</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</header>

@@ -1,0 +1,18 @@
+.mat-toolbar-row {
+    gap: 0.5rem;    
+}
+
+p {
+    padding-block: 1rem;
+}
+
+div {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    padding-block: 1rem;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
