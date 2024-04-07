@@ -25,31 +25,14 @@
       "status": "done"
     },
     {
-      "id": "9e5b3ae0-0955-4d8a-b8b1-ab83f86dc09f",
-      "title": "Teste",
-      "description": "Teste",
-      "status": "pending"
+      "title": "Angular Application",
+      "description": "Build a Angular Application for manager tasks to pratice api services and observables.",
+      "status": "pending",
+      "id": "995f36c7-0596-4129-8975-c189d3e5a1c1"
     },
     {
-      "id": "c449f388-dc4a-445e-9995-37e7bb0e210a",
-      "title": "Teste 2",
-      "description": "Teste 2",
-      "status": "pending"
-    },
-    {
-      "id": "7735c70b-e544-4f48-9203-d12b0e98c719",
-      "title": "Teste 3",
-      "description": "Teste 3"
-    },
-    {
-      "id": "d742f83b-51e3-4da2-b774-04e00f78d674",
-      "title": "Teste 4",
-      "description": "Teste 4",
-      "status": "pending"
-    },
-    {
-      "id": "d49cbe9e-d816-4f6c-bb57-a0562bb58f43",
-      "title": "Teste 3",
+      "id": "9cb1b811-0160-416f-9cf8-838d56bc9db2",
+      "title": "Task 1",
       "description": "",
       "status": "pending"
     }

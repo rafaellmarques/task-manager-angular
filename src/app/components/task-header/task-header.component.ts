@@ -15,14 +15,7 @@ export class TaskHeaderComponent {
   @Output() back = new EventEmitter<KeyboardEvent | MouseEvent>();
 
   onClick(): void {
-    if (this.action.observed) {
-      console.log('action');
-      
-      this.action.emit();
-    } else {
-      console.log('back');
-      
-      this.back.emit();
-    }
+    if (this.action.observed) this.action.emit();
+    if (this.back.observed) this.back.emit();
   }
 }

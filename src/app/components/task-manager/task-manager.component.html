@@ -1,18 +1,24 @@
-<!-- <header>
-  <mat-toolbar>
-    <span>Task Manager</span>
-    <span class="toolbar-spacer"></span>
-    <button mat-icon-button color="primary" aria-label="New" (click)="addTask()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </mat-toolbar>
-</header> -->
-
 <app-task-header title="Task Manager" (action)="addTask()"></app-task-header>
+
+<section class="filter">
+  <mat-form-field>
+    <mat-label>Filter by Title</mat-label>
+    <input matInput placeholder="Search task by title" [(ngModel)]="filterTitle" (keyup)="taskFilter()">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Filter by Status</mat-label>
+    <mat-select [(ngModel)]="filterStatus" (selectionChange)="taskFilter()">
+      <mat-option value="all">All</mat-option>
+      <mat-option value="pending">Pending</mat-option>
+      <mat-option value="done">Done</mat-option>
+    </mat-select>
+  </mat-form-field>
+</section>
 
 <section>
   <mat-accordion>
-    <mat-expansion-panel hideToggle *ngFor="let task of tasks$ | async">
+    <mat-expansion-panel hideToggle *ngFor="let task of tasks">
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{task.title}}
@@ -23,10 +29,10 @@
       </mat-expansion-panel-header>
       <p>{{task.description}}</p>
       <mat-action-row>
-        <button mat-icon-button color="accent" aria-label="Edit" (click)="editTask(task.id)">
+        <button mat-icon-button aria-label="Edit" (click)="editTask(task.id)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" aria-label="Delete" (click)="deleteTask(task.id!)">
+        <button mat-icon-button color="warn" aria-label="Delete" (click)="deleteTask(task.id!, task.title)">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-action-row>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,7 +13,7 @@ import { TaskManagerService } from 'src/app/services/task-manager.service';
   styleUrls: ['./task-create.component.scss']
 })
 export class TaskCreateComponent implements OnInit {
-  @Input() task: ITask = {
+  task: ITask = {
     title: '',
     description: '',
     status: 'pending'
@@ -21,7 +21,7 @@ export class TaskCreateComponent implements OnInit {
 
   id = uuidv4();
   taskForm!: FormGroup;
-  message!: string;
+  taskTitleExists!: boolean;
 
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
@@ -30,9 +30,9 @@ export class TaskCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.taskForm = this.formBuilder.group({
-      title: ['', Validators.required],
+      title: ['', Validators.requiredTrue],
       description: [''],
-      status: ['pending']      
+      status: ['pending']
     });
   }
 
@@ -40,7 +40,6 @@ export class TaskCreateComponent implements OnInit {
    * 
    */
   backToTaskManager(): void {
-    // window.history.back();
     this.router.navigateByUrl('/');
   }
 
@@ -51,29 +50,28 @@ export class TaskCreateComponent implements OnInit {
     if (this.taskForm.valid) {
       this.task = {
         id: this.id,
-        title:  this.taskForm.value.title,
+        title: this.taskForm.value.title,
         description: this.taskForm.value.description,
         status: this.taskForm.value.status
       };
 
+      this.validateTaskByTitle(this.task.title);      
+
       this.taskManagerService.createTask(this.task).subscribe({
         next: res => {
-          // this.message = 'Task created!';
-          this.resetForm();
           this.router.navigate(['/tasks']);
-          this.snackBar.open('Task created!', '', {
+          this.snackBar.open(`Task ${this.task.title} created!`, '', {
             duration: 5000
           });
         },
         error: err => {
           console.error(err);
-          if (!this.task.title.length) {
-            this.snackBar.open('Title need a value!', '', {
-              duration: 5000
-            });
-          }
         }
       });
+    } else {
+      this.snackBar.open(`You must enter a value for title!`, '', {
+        duration: 5000
+      });      
     }
   }
 
@@ -82,5 +80,16 @@ export class TaskCreateComponent implements OnInit {
    */
   resetForm(): void {
     this.taskForm.reset();
+  }
+
+  /**
+   * 
+   */
+  validateTaskByTitle(title: string): void {
+    const taskExists = this.taskManagerService.getTaskByTitle(title);
+
+    console.log(taskExists);
+    
+    this.taskTitleExists = taskExists ? true : false;
   }
 }

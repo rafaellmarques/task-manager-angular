@@ -1,10 +1,10 @@
 :host {
     display: block;
   }
-  
-  .button-group {
+
+  .filter {
     align-items: center;
     display: flex;
     gap: 1rem;
-    justify-content: flex-end;
+    justify-content: space-between;    
   }

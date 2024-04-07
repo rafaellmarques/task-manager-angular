@@ -2,6 +2,7 @@ import { Component, Input, OnInit, booleanAttribute, inject } from '@angular/cor
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ITask } from '../../interfaces/task.interface';
 import { TaskManagerService } from '../../services/task-manager.service';
 
@@ -12,61 +13,33 @@ export type TaskStatus = 'pending' | 'done';
   templateUrl: './task-detail.component.html',
   styleUrls: ['./task-detail.component.scss']
 })
-export class TaskDetailComponent  implements OnInit {
+export class TaskDetailComponent implements OnInit {
   @Input({ transform: booleanAttribute }) viewMode: boolean = true;
 
-  @Input() task: ITask = {
+  task: ITask = {
     title: '',
     description: '',
     status: 'pending'
-  }
-
+  };
+  taskId!: string;
   taskForm!: FormGroup;
   message!: string;
 
   private activedRoute = inject(ActivatedRoute);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
   private taskManagerService = inject(TaskManagerService);
 
   ngOnInit(): void {
     this.getTask(this.activedRoute.snapshot.params['id']);
-    
-    this.taskForm = this.formBuilder.group({
-      title: [this.task.title, Validators.required],
-      description: [this.task.description],
-      status: [this.task.status]      
-    });
-
-    this.task = {
-      title:  this.taskForm.value.title,
-      description: this.taskForm.value.description,
-      status: this.taskForm.value.status
-    };
   }
 
   /**
    * 
    */
   backToTaskManager(): void {
-    // window.history.back();
     this.router.navigate(['/']);
-  }
-
-  /**
-   * 
-   */
-  createTask(): void {
-    if (this.taskForm.valid) {
-      this.taskManagerService.createTask(this.task).subscribe({
-        next: res => {
-          this.message = 'Task created!';
-          this.resetForm();
-          this.router.navigate(['/tasks']);
-        },
-        error: err => console.error(err)
-      });
-    }
   }
 
   /**
@@ -86,6 +59,8 @@ export class TaskDetailComponent  implements OnInit {
    */
   editTask(): void {
     this.viewMode = !this.viewMode;
+
+
   }
 
   /**
@@ -94,8 +69,14 @@ export class TaskDetailComponent  implements OnInit {
    */
   getTask(id: string): void {
     this.taskManagerService.getTask(id).subscribe({
-      next: data => {
-        this.task = data;
+      next: task => {
+        this.task = task;
+        this.taskId = id;
+        this.taskForm = this.formBuilder.group({
+          title: [this.task.title, Validators.required],
+          description: [this.task.description],
+          status: [this.task.status]
+        });       
       },
       error: err => console.error(err)
     });
@@ -105,18 +86,25 @@ export class TaskDetailComponent  implements OnInit {
    * 
    */
   updateTask(): void {
-    this.taskManagerService.updateTask(this.task.id!, this.task).subscribe({
-      next: () => {
-        this.message = 'Task was updated!'
-      },
-      error: err => console.error(err)
-    });
-  }
+    if (this.taskForm.valid) {
+      this.task = {
+        title: this.taskForm.value.title,
+        description: this.taskForm.value.description,
+        status: this.taskForm.value.status
+      };
 
-  /**
-   * 
-   */
-  resetForm(): void {
-    this.taskForm.reset();
+      this.taskManagerService.updateTask(this.taskId, this.task).subscribe({
+        next: () => {
+          this.viewMode = true;
+          this.snackBar.open('Task updated!', '', {
+            duration: 5000
+          });
+        },
+        error: err => console.error(err)
+      });
+    } else {
+      console.log('ínvalid');
+      
+    }
   }
 }

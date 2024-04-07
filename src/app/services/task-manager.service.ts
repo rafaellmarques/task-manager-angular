@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { ITask } from '../interfaces/task.interface';
@@ -10,7 +11,7 @@ import { ITask } from '../interfaces/task.interface';
 })
 export class TaskManagerService {
   apiUrl = `${environment.apiTask}/tasks`;
-  
+
   private httpClient = inject(HttpClient);
 
   createTask(task: ITask): Observable<ITask> {
@@ -25,12 +26,19 @@ export class TaskManagerService {
     return this.httpClient.delete<ITask>(`${this.apiUrl}/${id}`);
   }
 
-  getAllTasks(): Observable<ITask[]> {
-    return this.httpClient.get<ITask[]>(this.apiUrl);
+  getAllTasks(titelFilter: string = '', statusFilter: 'pending' | 'done' | 'all'): Observable<ITask[]> {
+    // return this.httpClient.get<ITask[]>(this.apiUrl);
+    return this.httpClient.get<ITask[]>(this.apiUrl).pipe(
+      map(tasks => tasks.filter(task => (statusFilter === 'all' || task.status === statusFilter) && task.title.toLowerCase().includes(titelFilter.toLowerCase())))
+    );
   }
 
   getTask(id: string): Observable<ITask> {
     return this.httpClient.get<ITask>(`${this.apiUrl}/${id}`);
+  }
+
+  getTaskByTitle(title: string): Observable<ITask> {
+    return this.httpClient.get<ITask>(`${this.apiUrl}?title=${title}`);
   }
 
   updateTask(id: string, task: ITask): Observable<ITask> {
