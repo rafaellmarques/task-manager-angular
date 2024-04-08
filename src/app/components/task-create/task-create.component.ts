@@ -30,7 +30,7 @@ export class TaskCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.taskForm = this.formBuilder.group({
-      title: ['', Validators.requiredTrue],
+      title: ['', Validators.required],
       description: [''],
       status: ['pending']
     });
@@ -55,7 +55,7 @@ export class TaskCreateComponent implements OnInit {
         status: this.taskForm.value.status
       };
 
-      this.validateTaskByTitle(this.task.title);      
+      // this.validateTaskByTitle(this.task.title);      
 
       this.taskManagerService.createTask(this.task).subscribe({
         next: res => {
